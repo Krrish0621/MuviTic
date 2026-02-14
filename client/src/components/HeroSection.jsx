@@ -30,7 +30,7 @@ const HeroSection = () => {
       <div className="max-w-3xl mt-20 z-10">
 
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold leading-tight tracking-tight drop-shadow-2xl">
-          Experience Cinema
+          Book Movies
           <br />
           <span className="bg-gradient-to-r from-primary via-pink-500 to-orange-400 bg-clip-text text-transparent">
             Like Never Before
