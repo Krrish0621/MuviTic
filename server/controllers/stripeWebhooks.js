@@ -20,21 +20,51 @@ export const stripeWebhooks = async (request, response) => {
 
   try {
     switch (event.type) {
+
+      // 🔥 CASE 1: Normal card payments
       case "payment_intent.succeeded": {
         const paymentIntent = event.data.object;
+
         const sessionList = await stripeInstance.checkout.sessions.list({
           payment_intent: paymentIntent.id,
         });
 
+        if (!sessionList.data.length) break;
+
         const session = sessionList.data[0];
         const { bookingId } = session.metadata;
+
+        const booking = await Booking.findById(bookingId);
+        if (!booking || booking.isPaid) break;
 
         await Booking.findByIdAndUpdate(bookingId, {
           isPaid: true,
           paymentLink: "",
         });
 
-        // Send Confirmation Email
+        await inngest.send({
+          name: "app/show.booked",
+          data: { bookingId },
+        });
+
+        break;
+      }
+
+      // 🔥 CASE 2: Handles $0 payments AND all completed checkouts
+      case "checkout.session.completed": {
+        const session = event.data.object;
+        const { bookingId } = session.metadata;
+
+        if (!bookingId) break;
+
+        const booking = await Booking.findById(bookingId);
+        if (!booking || booking.isPaid) break;
+
+        await Booking.findByIdAndUpdate(bookingId, {
+          isPaid: true,
+          paymentLink: "",
+        });
+
         await inngest.send({
           name: "app/show.booked",
           data: { bookingId },
