@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
   port: 587,
+  secure: false, // important
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -10,14 +11,20 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmail = async ({ to, subject, body }) => {
-  const response = await transporter.sendMail({
-    from: process.env.SENDER_EMAIL,
-    to,
-    subject,
-    html: body,
-  });
+  try {
+    const response = await transporter.sendMail({
+      from: `"MuviTic" <${process.env.SENDER_EMAIL}>`,
+      to,
+      subject,
+      html: body,
+    });
 
-  return response;
+    console.log("✅ Email sent:", response.messageId);
+    return response;
+  } catch (error) {
+    console.error("❌ Email sending failed:", error);
+    throw error;
+  }
 };
 
 export { sendEmail };

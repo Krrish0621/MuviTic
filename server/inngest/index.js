@@ -83,6 +83,7 @@ const sendBookingConfirmationEmail = inngest.createFunction(
   { event: "app/show.booked" },
   async ({ event, step }) => {
     const { bookingId } = event.data;
+
     const booking = await Booking.findById(bookingId)
       .populate({
         path: "show",
@@ -90,28 +91,41 @@ const sendBookingConfirmationEmail = inngest.createFunction(
       })
       .populate("user");
 
-    await sendEmail({
-      to: booking.user.email,
-      subject: `Payment Confirmation: "${booking.show.movie.title}" booked!`,
-      body: `<div style="font-family: Arial, sans-serif; line-height: 1.5;">
-        <h2>Hi ${booking.user.name},</h2>
-        <p>Your booking for <strong style="color: #F84565;">"${
-          booking.show.movie.title
-        }"</strong> is confirmed.</p>
-        <p>
-          <strong>Date:</strong> ${new Date(
-            booking.show.showDateTime
-          ).toLocaleDateString("en-US", { timeZone: "Africa/Kigali" })}<br />
-          <strong>Time:</strong> ${new Date(
-            booking.show.showDateTime
-          ).toLocaleTimeString("en-US", { timeZone: "Africa/Kigali" })}
-        </p>
-        <p>Enjoy the show! 🍿</p>
-        <p>Thanks for booking with us!<br />- QuickShow Team</P>
-      </div>`,
-    });
+    if (!booking) {
+      console.error("❌ Booking not found for email:", bookingId);
+      return;
+    }
+
+    try {
+      await sendEmail({
+        to: booking.user.email,
+        subject: `🎟️ Booking Confirmed: ${booking.show.movie.title}`,
+        body: `
+        <div style="font-family: Arial, sans-serif; padding: 20px;">
+          <h2>Hi ${booking.user.name},</h2>
+          <p>Your booking for:</p>
+          <h3 style="color:#F84565;">"${booking.show.movie.title}"</h3>
+          <p>
+            <strong>Date:</strong> ${new Date(
+          booking.show.showDateTime
+        ).toLocaleDateString()}<br/>
+            <strong>Time:</strong> ${new Date(
+          booking.show.showDateTime
+        ).toLocaleTimeString()}
+          </p>
+          <p>Seats: ${booking.bookedSeats.join(", ")}</p>
+          <br/>
+          <p>Enjoy the show! 🍿</p>
+          <p>- MuviTic Team</p>
+        </div>
+        `,
+      });
+    } catch (err) {
+      console.error("❌ Failed to send booking confirmation:", err);
+    }
   }
 );
+
 
 // Inngest Function to send reminders
 const sendShowReminders = inngest.createFunction(
@@ -165,17 +179,17 @@ const sendShowReminders = inngest.createFunction(
             to: task.userEmail,
             subject: `Reminder: Your movie "${task.movieTitle}" starts soon!`,
             body: `<div style="font-family: Arial, sans-serif; padding: 20px;">
-        <h2>Hello ${task.user.name},</h2>
+        <h2>Hello ${task.userName},</h2>
         <p>This is a quick reminder that your movie:<p>
         <h3 style="color: #F84565;">"${task.movieTitle}"</h3>
         <p>
           is scheduled for <strong>${new Date(task.showTime).toLocaleDateString(
-            "en-US",
-            { timeZone: "Africa/Kigali" }
-          )}</strong> at
+              "en-US",
+              { timeZone: "Africa/Kigali" }
+            )}</strong> at
           <strong>${new Date(task.showTime).toLocaleTimeString("en-US", {
-            timeZone: "Africa/Kigali",
-          })}</strong>.
+              timeZone: "Africa/Kigali",
+            })}</strong>.
         </p>
         <p>It starts in approximately <strong>8 hours</strong> - make sure you're ready!</p>
         <br />
