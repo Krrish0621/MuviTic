@@ -17,11 +17,11 @@ export const getNowPlayingMovies = async (req, res) => {
           Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
         },
         params: {
-          region: "IN", // India
-          with_original_language: "hi", // Hindi movies only
+          region: "IN",
+          with_original_language: "hi",
           sort_by: "popularity.desc",
           "release_date.lte": today,
-          include_adult: false,
+          with_release_type: 2,
         },
       }
     );
