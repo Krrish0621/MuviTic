@@ -181,13 +181,6 @@ const SeatLayout = () => {
                   : "None"}
               </span>
             </p>
-
-            <p className="text-sm text-white/70 mt-2">
-              Total:{" "}
-              <span className="text-primary font-semibold">
-                ₹ {totalPrice}
-              </span>
-            </p>
           </div>
         </div>
 
