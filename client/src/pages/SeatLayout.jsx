@@ -1,6 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { assets } from "../assets/assets";
 import Loading from "../components/Loading";
 import { ArrowRightIcon, ClockIcon } from "lucide-react";
 import isoTimeFormat from "../lib/isoTimeFormat";
@@ -10,16 +9,18 @@ import { useAppContext } from "../context/AppContext";
 
 const SeatLayout = () => {
   const groupRows = [
-    ["A", "B"],
-    ["C", "D"],
+    ["A", "B"],       // VIP
+    ["C", "D"],       // Premium
     ["E", "F"],
     ["G", "H"],
     ["I", "J"],
   ];
 
+  const VIP_ROWS = ["A", "B"];
+  const PREMIUM_ROWS = ["C", "D"];
+
   const { id, date } = useParams();
   const navigate = useNavigate();
-
   const { axios, getToken, user } = useAppContext();
 
   const [selectedSeats, setSelectedSeats] = useState([]);
@@ -39,9 +40,7 @@ const SeatLayout = () => {
   const getShow = async () => {
     try {
       const { data } = await axios.get(`/api/show/${id}`);
-      if (data.success) {
-        setShow(data);
-      }
+      if (data.success) setShow(data);
     } catch (error) {
       console.log(error);
     }
@@ -55,9 +54,7 @@ const SeatLayout = () => {
       );
       if (data.success) {
         setOccupiedSeats(data.occupiedSeats || []);
-        setSelectedSeats([]); // reset seats when time changes
-      } else {
-        toast.error(data.message);
+        setSelectedSeats([]);
       }
     } catch (error) {
       console.log(error);
@@ -67,32 +64,25 @@ const SeatLayout = () => {
   };
 
   const handleSeatClick = (seatId) => {
-    if (!selectedTime) {
-      return toast("Please select time first");
-    }
-
-    if (isSeatOccupied(seatId)) {
-      return toast("This seat is already booked");
-    }
+    if (!selectedTime) return toast("Select time first");
+    if (isSeatOccupied(seatId)) return toast("Seat already booked");
 
     if (!isSeatSelected(seatId) && selectedSeats.length >= MAX_SELECTION) {
-      return toast(`You can only select ${MAX_SELECTION} seats`);
+      return toast(`Maximum ${MAX_SELECTION} seats allowed`);
     }
 
     setSelectedSeats((prev) =>
       prev.includes(seatId)
-        ? prev.filter((seat) => seat !== seatId)
+        ? prev.filter((s) => s !== seatId)
         : [...prev, seatId]
     );
   };
 
   const bookTickets = async () => {
     try {
-      if (!user) return toast.error("Please login to proceed");
-
-      if (!selectedTime || selectedSeats.length === 0) {
-        return toast.error("Please select a time and seats");
-      }
+      if (!user) return toast.error("Login required");
+      if (!selectedTime || selectedSeats.length === 0)
+        return toast.error("Select time & seats");
 
       const token = await getToken();
 
@@ -102,11 +92,8 @@ const SeatLayout = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      if (data.success) {
-        window.location.href = data.url;
-      } else {
-        toast.error(data.message);
-      }
+      if (data.success) window.location.href = data.url;
+      else toast.error(data.message);
     } catch (error) {
       toast.error(error.message);
     }
@@ -117,118 +104,170 @@ const SeatLayout = () => {
   }, [id]);
 
   useEffect(() => {
-    if (selectedTime) {
-      getOccupiedSeats();
-    }
+    if (selectedTime) getOccupiedSeats();
   }, [selectedTime]);
-
-  const renderSeats = (row, count = 9) => (
-    <div key={row} className="flex gap-2 mt-3">
-      {Array.from({ length: count }, (_, i) => {
-        const seatId = `${row}${i + 1}`;
-        const selected = isSeatSelected(seatId);
-        const occupied = isSeatOccupied(seatId);
-
-        return (
-          <button
-            key={seatId}
-            onClick={() => handleSeatClick(seatId)}
-            disabled={occupied}
-            className={`h-9 w-9 rounded-md text-xs font-medium transition-all duration-200 border
-              ${
-                occupied
-                  ? "bg-white/10 text-white/30 cursor-not-allowed"
-                  : selected
-                  ? "bg-primary text-black border-primary shadow-md shadow-primary/30"
-                  : "bg-white/5 border-white/20 hover:border-primary/60 hover:scale-105"
-              }
-            `}
-          >
-            {seatId}
-          </button>
-        );
-      })}
-    </div>
-  );
 
   if (!show) return <Loading />;
 
+  const seatPrice = (seatId) => {
+    if (VIP_ROWS.includes(seatId[0])) return 250;
+    if (PREMIUM_ROWS.includes(seatId[0])) return 180;
+    return 120;
+  };
+
+  const totalPrice = selectedSeats.reduce(
+    (acc, seat) => acc + seatPrice(seat),
+    0
+  );
+
   return (
-    <section className="relative flex flex-col md:flex-row px-6 md:px-16 lg:px-32 py-28 overflow-hidden">
+    <section className="relative px-4 sm:px-6 md:px-16 lg:px-28 py-24 overflow-hidden">
 
-      <BlurCircle top="100px" left="-120px" size="22rem" opacity={0.15} />
-      <BlurCircle bottom="0" right="-100px" size="22rem" opacity={0.12} />
+      <BlurCircle top="120px" left="-120px" size="24rem" opacity={0.12} />
+      <BlurCircle bottom="0" right="-100px" size="24rem" opacity={0.1} />
 
-      {/* Timings Sidebar */}
-      <div className="md:w-64 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 h-max md:sticky md:top-28">
-
-        <p className="text-lg font-semibold mb-6">
-          Available Timings
+      {/* ===== SHOW DETAILS HEADER ===== */}
+      <div className="text-center mb-12">
+        <h1 className="text-3xl sm:text-4xl font-bold">
+          {show.movie?.title}
+        </h1>
+        <p className="text-white/60 mt-2">
+          {show.theatre?.name} • {date}
         </p>
-
-        <div className="space-y-3">
-          {show?.dateTime?.[date]?.map((item) => (
-            <button
-              key={item.showId}
-              onClick={() => setSelectedTime(item)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition-all w-full
-                ${
-                  selectedTime?.showId === item.showId
-                    ? "bg-primary text-black"
-                    : "bg-white/5 hover:bg-white/10"
-                }
-              `}
-            >
-              <ClockIcon className="w-4 h-4" />
-              {isoTimeFormat(item.time)}
-            </button>
-          ))}
-        </div>
-
-        {/* Legend */}
-        <div className="mt-8 text-xs text-white/60 space-y-2">
-          <p><span className="inline-block w-3 h-3 bg-white/20 rounded mr-2"></span>Available</p>
-          <p><span className="inline-block w-3 h-3 bg-primary rounded mr-2"></span>Selected</p>
-          <p><span className="inline-block w-3 h-3 bg-white/10 rounded mr-2"></span>Booked</p>
-        </div>
       </div>
 
-      {/* Seat Area */}
-      <div className="flex-1 flex flex-col items-center mt-16 md:mt-0">
+      <div className="flex flex-col lg:flex-row gap-12">
 
-        <h1 className="text-2xl font-semibold mb-6">
-          Select Your Seats
-        </h1>
+        {/* ===== LEFT PANEL ===== */}
+        <div className="lg:w-80 w-full space-y-8">
 
-        <img
-          src={assets.screenImage}
-          alt="screen"
-          className="mb-4"
-        />
+          {/* Timings */}
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+            <p className="text-lg font-semibold mb-6">
+              Available Timings
+            </p>
 
-        <p className="text-white/50 text-xs mb-10">
-          SCREEN SIDE
-        </p>
-
-        <div className="text-xs text-white/70">
-
-          {groupRows.map((group, index) => (
-            <div key={index} className="mb-6">
-              {group.map((row) => renderSeats(row))}
+            <div className="grid grid-cols-2 gap-3">
+              {show?.dateTime?.[date]?.map((item) => (
+                <button
+                  key={item.showId}
+                  onClick={() => setSelectedTime(item)}
+                  className={`flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm transition-all
+                    ${
+                      selectedTime?.showId === item.showId
+                        ? "bg-primary text-black shadow-lg shadow-primary/40"
+                        : "bg-white/5 hover:bg-white/10"
+                    }
+                  `}
+                >
+                  <ClockIcon className="w-4 h-4" />
+                  {isoTimeFormat(item.time)}
+                </button>
+              ))}
             </div>
-          ))}
+          </div>
 
+          {/* Booking Summary */}
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+            <p className="text-lg font-semibold mb-4">
+              Your Selection
+            </p>
+
+            <p className="text-sm text-white/70">
+              Seats:{" "}
+              <span className="text-white">
+                {selectedSeats.length
+                  ? selectedSeats.join(", ")
+                  : "None"}
+              </span>
+            </p>
+
+            <p className="text-sm text-white/70 mt-2">
+              Total:{" "}
+              <span className="text-primary font-semibold">
+                ₹ {totalPrice}
+              </span>
+            </p>
+          </div>
         </div>
 
-        <button
-          onClick={bookTickets}
-          disabled={loadingSeats}
-          className="mt-16 flex items-center gap-2 px-10 py-3 text-sm bg-primary text-black hover:bg-primary-dull rounded-full font-medium transition-all duration-300 shadow-md shadow-primary/20 hover:shadow-primary/40 disabled:opacity-50"
-        >
-          Proceed to Checkout
-          <ArrowRightIcon strokeWidth={3} className="w-4 h-4" />
-        </button>
+        {/* ===== SEAT AREA ===== */}
+        <div className="flex-1 flex flex-col items-center">
 
+          {/* Screen */}
+          <div className="relative mb-12 w-full max-w-xl">
+            <div className="h-3 bg-gradient-to-r from-gray-300 to-white rounded-full shadow-2xl shadow-white/30"></div>
+            <p className="text-center text-xs text-white/50 mt-2">
+              SCREEN SIDE
+            </p>
+          </div>
+
+          {/* Seats with Perspective */}
+          <div className="overflow-x-auto w-full">
+            <div className="min-w-[500px] flex flex-col items-center transform perspective-1000 rotateX-6">
+
+              {groupRows.map((group, index) => (
+                <div key={index} className="mb-8">
+                  {group.map((row) => (
+                    <div key={row} className="flex gap-3 mt-3 justify-center">
+
+                      {Array.from({ length: 9 }, (_, i) => {
+                        const seatId = `${row}${i + 1}`;
+                        const selected = isSeatSelected(seatId);
+                        const occupied = isSeatOccupied(seatId);
+
+                        let baseColor = "bg-white/5 border-white/20";
+
+                        if (VIP_ROWS.includes(row))
+                          baseColor = "bg-yellow-500/10 border-yellow-400/40";
+
+                        if (PREMIUM_ROWS.includes(row))
+                          baseColor = "bg-purple-500/10 border-purple-400/40";
+
+                        return (
+                          <button
+                            key={seatId}
+                            onClick={() => handleSeatClick(seatId)}
+                            disabled={occupied}
+                            className={`h-10 w-10 rounded-md text-xs font-medium transition-all duration-200 border
+                              ${
+                                occupied
+                                  ? "bg-white/10 text-white/30 cursor-not-allowed"
+                                  : selected
+                                  ? "bg-primary text-black border-primary shadow-xl shadow-primary/50 scale-125 animate-bounce"
+                                  : `${baseColor} hover:scale-110 hover:shadow-lg`
+                              }
+                            `}
+                          >
+                            {seatId}
+                          </button>
+                        );
+                      })}
+
+                    </div>
+                  ))}
+                </div>
+              ))}
+
+            </div>
+          </div>
+
+          {/* Checkout Button */}
+          <button
+            onClick={bookTickets}
+            disabled={loadingSeats}
+            className="mt-16 w-full sm:w-auto px-14 py-4 rounded-full
+                       bg-gradient-to-r from-primary to-emerald-400
+                       text-black font-semibold
+                       shadow-xl shadow-primary/30
+                       hover:scale-105 hover:shadow-primary/50
+                       transition-all duration-300
+                       animate-pulse disabled:opacity-50"
+          >
+            Proceed to Checkout →
+          </button>
+
+        </div>
       </div>
     </section>
   );
