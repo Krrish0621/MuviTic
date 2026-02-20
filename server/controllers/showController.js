@@ -4,7 +4,7 @@ import Show from "../models/Show.js";
 import { inngest } from "../inngest/index.js";
 
 // ======================================
-// API to get NOW PLAYING Bollywood movies
+// API to get Bollywood movies section-wise
 // ======================================
 export const getNowPlayingMovies = async (req, res) => {
   try {
@@ -15,18 +15,43 @@ export const getNowPlayingMovies = async (req, res) => {
           Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
         },
         params: {
-          region: "IN", // Only Indian theatrical releases
+          region: "IN",
         },
       }
     );
 
-    // Filter only Hindi movies
+    const today = new Date();
+
     const hindiMovies = data.results
       .filter((movie) => movie.original_language === "hi")
-      .filter((movie) => movie.poster_path) // Remove movies without posters
-      .sort((a, b) => b.popularity - a.popularity);
+      .filter((movie) => movie.poster_path);
 
-    res.json({ success: true, movies: hindiMovies });
+    const newReleases = [];
+    const nowPlaying = [];
+    const olderRunning = [];
+
+    hindiMovies.forEach((movie) => {
+      const releaseDate = new Date(movie.release_date);
+      const diffDays =
+        (today - releaseDate) / (1000 * 60 * 60 * 24);
+
+      if (diffDays <= 14) {
+        newReleases.push(movie);
+      } else if (diffDays <= 45) {
+        nowPlaying.push(movie);
+      } else {
+        olderRunning.push(movie);
+      }
+    });
+
+    res.json({
+      success: true,
+      sections: {
+        newReleases,
+        nowPlaying,
+        olderRunning,
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: error.message });
@@ -43,7 +68,6 @@ export const addShow = async (req, res) => {
     let movie = await Movie.findById(movieId);
 
     if (!movie) {
-      // Fetch movie details + credits from TMDB
       const [movieDetailsResponse, movieCreditsResponse] =
         await Promise.all([
           axios.get(`https://api.themoviedb.org/3/movie/${movieId}`, {

@@ -10,7 +10,8 @@ const AddShows = () => {
   const { axios, getToken, user, image_base_url } = useAppContext();
 
   const currency = import.meta.env.VITE_CURRENCY;
-  const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
+
+  const [movieSections, setMovieSections] = useState(null);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [dateTimeSelection, setDateTimeSelection] = useState({});
   const [dateTimeInput, setDateTimeInput] = useState("");
@@ -24,7 +25,7 @@ const AddShows = () => {
       });
 
       if (data.success) {
-        setNowPlayingMovies(data.movies);
+        setMovieSections(data.sections);
       }
     } catch (error) {
       console.error("Error fetching movies:", error);
@@ -52,11 +53,7 @@ const AddShows = () => {
         const { [date]: _, ...rest } = prev;
         return rest;
       }
-
-      return {
-        ...prev,
-        [date]: filteredTimes,
-      };
+      return { ...prev, [date]: filteredTimes };
     });
   };
 
@@ -108,45 +105,57 @@ const AddShows = () => {
     }
   }, [user]);
 
-  return nowPlayingMovies.length > 0 ? (
+  if (!movieSections) return <Loading />;
+
+  return (
     <>
       <Title text1="Add" text2="Shows" />
-      <p className="mt-10 text-lg font-medium">Now Playing Movies</p>
-      <div className="overflow-x-auto pb-4">
-        <div className="group flex flex-wrap gap-4 mt-4 w-max">
-          {nowPlayingMovies.map((movie) => (
-            <div
-              key={movie.id}
-              className={`relative max-w-40 cursor-pointer group-hover:not-hover:opacity-40 hover:-translate-y-1 transition duration-300`}
-              onClick={() => setSelectedMovie(movie.id)}
-            >
-              <div className="relative rounded-lg overflow-hidden">
-                <img
-                  src={image_base_url + movie.poster_path}
-                  alt="movie_poster"
-                  className="w-full object-cover brightness-90"
-                />
-                <div className="text-sm flex items-center justify-between p-2 bg-black/70 w-full absolute bottom-0 left-0">
-                  <p className="flex items-center gap-1 text-gray-400">
-                    <StarIcon className="w-4 h-4 text-primary fill-primary" />
-                    {movie.vote_average.toFixed(1)}
-                  </p>
-                  <p className="text-gray-300">
-                    {kConverter(movie.vote_count)} Votes
-                  </p>
+
+      {Object.entries(movieSections).map(([sectionTitle, movies]) => (
+        <div key={sectionTitle} className="mt-10">
+          <p className="text-lg font-semibold capitalize mb-4">
+            {sectionTitle.replace(/([A-Z])/g, " $1")}
+          </p>
+
+          <div className="flex flex-wrap gap-4">
+            {movies.map((movie) => (
+              <div
+                key={movie.id}
+                className="relative max-w-40 cursor-pointer hover:-translate-y-1 transition duration-300"
+                onClick={() => setSelectedMovie(movie.id)}
+              >
+                <div className="relative rounded-lg overflow-hidden">
+                  <img
+                    src={image_base_url + movie.poster_path}
+                    alt="movie_poster"
+                    className="w-full object-cover brightness-90"
+                  />
+                  <div className="text-sm flex items-center justify-between p-2 bg-black/70 w-full absolute bottom-0 left-0">
+                    <p className="flex items-center gap-1 text-gray-400">
+                      <StarIcon className="w-4 h-4 text-primary fill-primary" />
+                      {movie.vote_average.toFixed(1)}
+                    </p>
+                    <p className="text-gray-300">
+                      {kConverter(movie.vote_count)} Votes
+                    </p>
+                  </div>
                 </div>
+
+                {selectedMovie === movie.id && (
+                  <div className="absolute top-2 right-2 flex items-center justify-center bg-primary h-6 w-6 rounded">
+                    <CheckIcon className="w-4 h-4 text-white" strokeWidth={2.5} />
+                  </div>
+                )}
+
+                <p className="font-medium truncate">{movie.title}</p>
+                <p className="text-gray-400 text-sm">
+                  {movie.release_date}
+                </p>
               </div>
-              {selectedMovie === movie.id && (
-                <div className="absolute top-2 right-2 flex items-center justify-center bg-primary h-6 w-6 rounded">
-                  <CheckIcon className="w-4 h-4 text-white" strokeWidth={2.5} />
-                </div>
-              )}
-              <p className="font-medium truncate">{movie.title}</p>
-              <p className="text-gray-400 text-sm">{movie.release_date}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      ))}
 
       {/* Show Price Input */}
       <div className="mt-8">
@@ -185,7 +194,7 @@ const AddShows = () => {
         </div>
       </div>
 
-      {/* Display Selected Times */}
+      {/* Selected Times */}
       {Object.keys(dateTimeSelection).length > 0 && (
         <div className="mt-6">
           <h2 className="mb-2">Selected Date-Time</h2>
@@ -222,8 +231,6 @@ const AddShows = () => {
         Add Show
       </button>
     </>
-  ) : (
-    <Loading />
   );
 };
 
