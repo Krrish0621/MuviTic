@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://muvitic.vercel.app/sitemap.xml
