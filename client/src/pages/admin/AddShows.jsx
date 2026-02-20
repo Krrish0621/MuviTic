@@ -8,7 +8,6 @@ import toast from "react-hot-toast";
 
 const AddShows = () => {
   const { axios, getToken, user, image_base_url } = useAppContext();
-
   const currency = import.meta.env.VITE_CURRENCY;
 
   const [movieSections, setMovieSections] = useState(null);
@@ -18,6 +17,7 @@ const AddShows = () => {
   const [showPrice, setShowPrice] = useState("");
   const [addingShow, setAddingShow] = useState(false);
 
+  // ================= FETCH MOVIES =================
   const fetchNowPlayingMovies = async () => {
     try {
       const { data } = await axios.get("/api/show/now-playing", {
@@ -32,6 +32,7 @@ const AddShows = () => {
     }
   };
 
+  // ================= DATE TIME ADD =================
   const handleDateTimeAdd = () => {
     if (!dateTimeInput) return;
     const [date, time] = dateTimeInput.split("T");
@@ -57,6 +58,7 @@ const AddShows = () => {
     });
   };
 
+  // ================= SUBMIT =================
   const handleSubmit = async () => {
     try {
       setAddingShow(true);
@@ -66,7 +68,9 @@ const AddShows = () => {
         Object.keys(dateTimeSelection).length === 0 ||
         !showPrice
       ) {
-        return toast("Missing required fields");
+        toast("Missing required fields");
+        setAddingShow(false);
+        return;
       }
 
       const showsInput = Object.entries(dateTimeSelection).map(
@@ -111,53 +115,93 @@ const AddShows = () => {
     <>
       <Title text1="Add" text2="Shows" />
 
-      {Object.entries(movieSections).map(([sectionTitle, movies]) => (
-        <div key={sectionTitle} className="mt-10">
-          <p className="text-lg font-semibold capitalize mb-4">
-            {sectionTitle.replace(/([A-Z])/g, " $1")}
-          </p>
+      {/* ================= NOW PLAYING ================= */}
+      <div className="mt-10">
+        <p className="text-lg font-semibold mb-4">Now Playing</p>
 
-          <div className="flex flex-wrap gap-4">
-            {movies.map((movie) => (
-              <div
-                key={movie.id}
-                className="relative max-w-40 cursor-pointer hover:-translate-y-1 transition duration-300"
-                onClick={() => setSelectedMovie(movie.id)}
-              >
-                <div className="relative rounded-lg overflow-hidden">
-                  <img
-                    src={image_base_url + movie.poster_path}
-                    alt="movie_poster"
-                    className="w-full object-cover brightness-90"
-                  />
-                  <div className="text-sm flex items-center justify-between p-2 bg-black/70 w-full absolute bottom-0 left-0">
-                    <p className="flex items-center gap-1 text-gray-400">
-                      <StarIcon className="w-4 h-4 text-primary fill-primary" />
-                      {movie.vote_average.toFixed(1)}
-                    </p>
-                    <p className="text-gray-300">
-                      {kConverter(movie.vote_count)} Votes
-                    </p>
-                  </div>
+        <div className="flex flex-wrap gap-4">
+          {movieSections.nowPlaying?.map((movie) => (
+            <div
+              key={movie.id}
+              className="relative max-w-40 cursor-pointer hover:-translate-y-1 transition duration-300"
+              onClick={() => setSelectedMovie(movie.id)}
+            >
+              <div className="relative rounded-lg overflow-hidden">
+                <img
+                  src={image_base_url + movie.poster_path}
+                  alt="movie_poster"
+                  className="w-full object-cover brightness-90"
+                />
+                <div className="text-sm flex items-center justify-between p-2 bg-black/70 w-full absolute bottom-0 left-0">
+                  <p className="flex items-center gap-1 text-gray-400">
+                    <StarIcon className="w-4 h-4 text-primary fill-primary" />
+                    {movie.vote_average.toFixed(1)}
+                  </p>
+                  <p className="text-gray-300">
+                    {kConverter(movie.vote_count)} Votes
+                  </p>
                 </div>
-
-                {selectedMovie === movie.id && (
-                  <div className="absolute top-2 right-2 flex items-center justify-center bg-primary h-6 w-6 rounded">
-                    <CheckIcon className="w-4 h-4 text-white" strokeWidth={2.5} />
-                  </div>
-                )}
-
-                <p className="font-medium truncate">{movie.title}</p>
-                <p className="text-gray-400 text-sm">
-                  {movie.release_date}
-                </p>
               </div>
-            ))}
-          </div>
-        </div>
-      ))}
 
-      {/* Show Price Input */}
+              {selectedMovie === movie.id && (
+                <div className="absolute top-2 right-2 flex items-center justify-center bg-primary h-6 w-6 rounded">
+                  <CheckIcon className="w-4 h-4 text-white" strokeWidth={2.5} />
+                </div>
+              )}
+
+              <p className="font-medium truncate">{movie.title}</p>
+              <p className="text-gray-400 text-sm">
+                {movie.release_date}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ================= OLDER MOVIES ================= */}
+      <div className="mt-10">
+        <p className="text-lg font-semibold mb-4">Older Movies</p>
+
+        <div className="flex flex-wrap gap-4">
+          {movieSections.olderMovies?.map((movie) => (
+            <div
+              key={movie.id}
+              className="relative max-w-40 cursor-pointer hover:-translate-y-1 transition duration-300"
+              onClick={() => setSelectedMovie(movie.id)}
+            >
+              <div className="relative rounded-lg overflow-hidden">
+                <img
+                  src={image_base_url + movie.poster_path}
+                  alt="movie_poster"
+                  className="w-full object-cover brightness-90"
+                />
+                <div className="text-sm flex items-center justify-between p-2 bg-black/70 w-full absolute bottom-0 left-0">
+                  <p className="flex items-center gap-1 text-gray-400">
+                    <StarIcon className="w-4 h-4 text-primary fill-primary" />
+                    {movie.vote_average.toFixed(1)}
+                  </p>
+                  <p className="text-gray-300">
+                    {kConverter(movie.vote_count)} Votes
+                  </p>
+                </div>
+              </div>
+
+              {selectedMovie === movie.id && (
+                <div className="absolute top-2 right-2 flex items-center justify-center bg-primary h-6 w-6 rounded">
+                  <CheckIcon className="w-4 h-4 text-white" strokeWidth={2.5} />
+                </div>
+              )}
+
+              <p className="font-medium truncate">{movie.title}</p>
+              <p className="text-gray-400 text-sm">
+                {movie.release_date}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ================= SHOW PRICE ================= */}
       <div className="mt-8">
         <label className="block text-sm font-medium mb-2">Show Price</label>
         <div className="inline-flex items-center gap-2 border border-gray-600 px-3 py-2 rounded-md">
@@ -173,7 +217,7 @@ const AddShows = () => {
         </div>
       </div>
 
-      {/* Date & Time Selection */}
+      {/* ================= DATE TIME ================= */}
       <div className="mt-6">
         <label className="block text-sm font-medium mb-2">
           Select Date and Time
@@ -194,7 +238,7 @@ const AddShows = () => {
         </div>
       </div>
 
-      {/* Selected Times */}
+      {/* ================= SELECTED TIMES ================= */}
       {Object.keys(dateTimeSelection).length > 0 && (
         <div className="mt-6">
           <h2 className="mb-2">Selected Date-Time</h2>

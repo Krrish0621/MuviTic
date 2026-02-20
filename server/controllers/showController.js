@@ -4,11 +4,12 @@ import Show from "../models/Show.js";
 import { inngest } from "../inngest/index.js";
 
 // ======================================
-// API to get Bollywood movies section-wise
+// API to get Now Playing + Older Movies
 // ======================================
 export const getNowPlayingMovies = async (req, res) => {
   try {
-    const { data } = await axios.get(
+    // 🎬 1. NOW PLAYING (India theatrical)
+    const nowPlayingResponse = await axios.get(
       "https://api.themoviedb.org/3/movie/now_playing",
       {
         headers: {
@@ -20,55 +21,41 @@ export const getNowPlayingMovies = async (req, res) => {
       }
     );
 
-    const today = new Date();
-
-    const hindiMovies = data.results
+    const nowPlaying = nowPlayingResponse.data.results
       .filter((movie) => movie.original_language === "hi")
       .filter((movie) => movie.poster_path)
       .sort((a, b) => b.popularity - a.popularity);
 
-    let newReleases = [];
-    let nowPlaying = [];
-    let olderRunning = [];
-
-    // 🔹 Initial Split
-    hindiMovies.forEach((movie) => {
-      const releaseDate = new Date(movie.release_date);
-      const diffDays =
-        (today - releaseDate) / (1000 * 60 * 60 * 24);
-
-      if (diffDays <= 7) {
-        newReleases.push(movie);
-      } else if (diffDays <= 30) {
-        nowPlaying.push(movie);
-      } else {
-        olderRunning.push(movie);
+    // 🎞 2. OLDER HINDI MOVIES (Before 2016)
+    const olderMoviesResponse = await axios.get(
+      "https://api.themoviedb.org/3/discover/movie",
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
+        },
+        params: {
+          with_original_language: "hi",
+          sort_by: "popularity.desc",
+          "primary_release_date.lte": "2015-12-31",
+          include_adult: false,
+          page: 1,
+        },
       }
-    });
+    );
 
-    // 🔥 Guarantee at least 1 movie per section
-    if (newReleases.length === 0 && nowPlaying.length > 0) {
-      newReleases.push(nowPlaying.shift());
-    }
-
-    if (olderRunning.length === 0 && nowPlaying.length > 0) {
-      olderRunning.push(nowPlaying.pop());
-    }
-
-    if (nowPlaying.length === 0 && newReleases.length > 1) {
-      nowPlaying.push(newReleases.pop());
-    }
+    const olderMovies = olderMoviesResponse.data.results
+      .filter((movie) => movie.poster_path)
+      .slice(0, 12);
 
     res.json({
       success: true,
       sections: {
-        newReleases,
         nowPlaying,
-        olderRunning,
+        olderMovies,
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("Now Playing Fetch Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -144,7 +131,7 @@ export const addShow = async (req, res) => {
 
     res.json({ success: true, message: "Show Added successfully." });
   } catch (error) {
-    console.error(error);
+    console.error("Add Show Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -173,7 +160,7 @@ export const getShows = async (req, res) => {
       shows: Array.from(uniqueShowsMap.values()),
     });
   } catch (error) {
-    console.error(error);
+    console.error("Get Shows Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -209,7 +196,7 @@ export const getShow = async (req, res) => {
 
     res.json({ success: true, movie, dateTime });
   } catch (error) {
-    console.error(error);
+    console.error("Get Show Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
