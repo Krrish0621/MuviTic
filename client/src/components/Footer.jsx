@@ -68,8 +68,8 @@ const Footer = () => {
           <div>
             <h2 className="font-semibold mb-5 text-white text-lg">Contact</h2>
             <div className="text-sm space-y-3 text-white/60">
-              <p>krrish@gmail.com</p>
-              <p>+91 90000 00000</p>
+              <p>muvitic@gmail.com</p>
+              <p>9999999999</p>
               <p>India</p>
             </div>
           </div>
