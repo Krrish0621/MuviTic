@@ -48,24 +48,16 @@ export const getAllShows = async (req, res) => {
 // API to get all bookings
 export const getAllBookings = async (req, res) => {
   try {
-    const bookings = await Booking.find({}).sort({ createdAt: -1 });
+    const bookings = await Booking.find({})
+      .populate({
+        path: "show",
+        populate: { path: "movie" },
+      })
+      .sort({ createdAt: -1 });
 
-    const formattedBookings = [];
-
-    for (let booking of bookings) {
-      const user = await User.findById(booking.user);
-      const show = await Show.findById(booking.show).populate("movie");
-
-      formattedBookings.push({
-        ...booking._doc,
-        user,
-        show,
-      });
-    }
-
-    res.json({ success: true, bookings: formattedBookings });
+    res.json({ success: true, bookings });
   } catch (error) {
-    console.error("Get All Bookings Error:", error);
+    console.error("All Bookings Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };

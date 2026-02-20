@@ -50,14 +50,26 @@ const ListBookings = () => {
                 key={index}
                 className="border-b border-primary/20 bg-primary/5 even:bg-primary/10"
               >
-                <td className="p-2 min-w-45 pl-5">{item.user.name}</td>
-                <td className="p-2">{item.show.movie.title}</td>
-                <td className="p-2">{dateFormat(item.show.showDateTime)}</td>
-                <td className="p-2">
-                  {Object.keys(item.bookedSeats)
-                    .map((seat) => item.bookedSeats[seat])
-                    .join(", ")}
+                <td className="p-2 min-w-45 pl-5">
+                  {item.user || "Unknown User"}
                 </td>
+
+                <td className="p-2">
+                  {item.show?.movie?.title || "Movie Deleted"}
+                </td>
+
+                <td className="p-2">
+                  {item.show?.showDateTime
+                    ? dateFormat(item.show.showDateTime)
+                    : "N/A"}
+                </td>
+
+                <td className="p-2">
+                  {Array.isArray(item.bookedSeats)
+                    ? item.bookedSeats.join(", ")
+                    : "N/A"}
+                </td>
+
                 <td className="p-2">
                   {currency} {item.amount}
                 </td>
