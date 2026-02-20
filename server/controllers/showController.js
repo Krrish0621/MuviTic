@@ -24,25 +24,40 @@ export const getNowPlayingMovies = async (req, res) => {
 
     const hindiMovies = data.results
       .filter((movie) => movie.original_language === "hi")
-      .filter((movie) => movie.poster_path);
+      .filter((movie) => movie.poster_path)
+      .sort((a, b) => b.popularity - a.popularity);
 
-    const newReleases = [];
-    const nowPlaying = [];
-    const olderRunning = [];
+    let newReleases = [];
+    let nowPlaying = [];
+    let olderRunning = [];
 
+    // 🔹 Initial Split
     hindiMovies.forEach((movie) => {
       const releaseDate = new Date(movie.release_date);
       const diffDays =
         (today - releaseDate) / (1000 * 60 * 60 * 24);
 
-      if (diffDays <= 14) {
+      if (diffDays <= 7) {
         newReleases.push(movie);
-      } else if (diffDays <= 45) {
+      } else if (diffDays <= 30) {
         nowPlaying.push(movie);
       } else {
         olderRunning.push(movie);
       }
     });
+
+    // 🔥 Guarantee at least 1 movie per section
+    if (newReleases.length === 0 && nowPlaying.length > 0) {
+      newReleases.push(nowPlaying.shift());
+    }
+
+    if (olderRunning.length === 0 && nowPlaying.length > 0) {
+      olderRunning.push(nowPlaying.pop());
+    }
+
+    if (nowPlaying.length === 0 && newReleases.length > 1) {
+      nowPlaying.push(newReleases.pop());
+    }
 
     res.json({
       success: true,
