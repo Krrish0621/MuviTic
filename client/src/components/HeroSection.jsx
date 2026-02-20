@@ -6,30 +6,28 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative h-screen flex items-center px-6 md:px-16 lg:px-36 overflow-hidden text-white">
+    <section className="relative min-h-screen pt-20 flex items-center px-6 md:px-16 lg:px-36 overflow-hidden text-white">
+      {/* Background */}
+      <div className="absolute inset-0 -z-10">
 
-      {/* Background Layer */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-
-        {/* Enlarged Image (Taller + Pushed Down) */}
+        {/* Proper Cover Image */}
         <img
           src="/backgroundImage.png"
           alt="cinema background"
-          className="absolute w-full h-[125%] top-16 object-cover"
+          className="w-full h-full object-cover object-[42%_0%]"
         />
 
-        {/* Strong Left Dark Gradient for Text Visibility */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-transparent"></div>
+        {/* Strong Cinematic Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/40"></div>
 
-        {/* Bottom Fade for Smooth Transition */}
+        {/* Bottom Fade */}
         <div className="absolute bottom-0 left-0 w-full h-52 bg-gradient-to-t from-black to-transparent"></div>
-
       </div>
 
       {/* Content */}
-      <div className="max-w-3xl mt-20 z-10">
+      <div className="max-w-3xl z-10 pt-20">
 
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold leading-tight tracking-tight drop-shadow-2xl">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold leading-tight tracking-tight">
           Book Movies
           <br />
           <span className="bg-gradient-to-r from-primary via-pink-500 to-orange-400 bg-clip-text text-transparent">
@@ -46,9 +44,10 @@ const HeroSection = () => {
         <button
           onClick={() => navigate("/movies")}
           className="mt-10 flex items-center gap-3 px-10 py-4 rounded-full
-                     bg-primary text-black font-medium
+                     bg-gradient-to-r from-primary to-emerald-400
+                     text-black font-medium
                      shadow-xl shadow-primary/30
-                     hover:shadow-primary/50 hover:scale-105
+                     hover:scale-105 hover:shadow-primary/50
                      transition-all duration-300"
         >
           Explore Movies
