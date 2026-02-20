@@ -47,7 +47,9 @@ const Theatres = () => {
           Discover Cinemas
         </p>
 
-        <h1 className="text-3xl md:text-4xl font-semibold mt-2">
+        <h1 className="text-4xl font-bold mt-2 
+                       bg-gradient-to-r from-red-500 via-pink-500 to-orange-400 
+                       bg-clip-text text-transparent">
           Experience Movies Like Never Before
         </h1>
 
@@ -94,7 +96,9 @@ const Theatres = () => {
           <p className="text-white/50 uppercase tracking-widest text-sm">
             Find Your Theatre
           </p>
-          <h2 className="text-4xl font-semibold mt-2">
+          <h2 className='text-4xl font-bold mt-2 
+                       bg-gradient-to-r from-red-500 via-pink-500 to-orange-400 
+                       bg-clip-text text-transparent'>
             Available Theatres
           </h2>
         </div>
