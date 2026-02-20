@@ -3,39 +3,39 @@ import Movie from "../models/Movie.js";
 import Show from "../models/Show.js";
 import { inngest } from "../inngest/index.js";
 
-// ===============================
-// API to get NOW PLAYING BOLLYWOOD movies
-// ===============================
+// ======================================
+// API to get NOW PLAYING Bollywood movies
+// ======================================
 export const getNowPlayingMovies = async (req, res) => {
   try {
-    const today = new Date().toISOString().split("T")[0];
-
     const { data } = await axios.get(
-      "https://api.themoviedb.org/3/discover/movie",
+      "https://api.themoviedb.org/3/movie/now_playing",
       {
         headers: {
           Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
         },
         params: {
-          region: "IN",
-          with_original_language: "hi",
-          sort_by: "popularity.desc",
-          "release_date.lte": today,
-          with_release_type: 2,
+          region: "IN", // Only Indian theatrical releases
         },
       }
     );
 
-    res.json({ success: true, movies: data.results });
+    // Filter only Hindi movies
+    const hindiMovies = data.results
+      .filter((movie) => movie.original_language === "hi")
+      .filter((movie) => movie.poster_path) // Remove movies without posters
+      .sort((a, b) => b.popularity - a.popularity);
+
+    res.json({ success: true, movies: hindiMovies });
   } catch (error) {
     console.error(error);
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// ===============================
+// ======================================
 // API to add a new show to the database
-// ===============================
+// ======================================
 export const addShow = async (req, res) => {
   try {
     const { movieId, showsInput, showPrice } = req.body;
@@ -106,13 +106,13 @@ export const addShow = async (req, res) => {
     res.json({ success: true, message: "Show Added successfully." });
   } catch (error) {
     console.error(error);
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// ===============================
-// API to get all upcoming shows
-// ===============================
+// ======================================
+// API to get all upcoming movies with shows
+// ======================================
 export const getShows = async (req, res) => {
   try {
     const shows = await Show.find({
@@ -121,11 +121,12 @@ export const getShows = async (req, res) => {
       .populate("movie")
       .sort({ showDateTime: 1 });
 
-    // Remove duplicates
     const uniqueShowsMap = new Map();
 
     shows.forEach((show) => {
-      uniqueShowsMap.set(show.movie._id.toString(), show.movie);
+      if (show.movie) {
+        uniqueShowsMap.set(show.movie._id.toString(), show.movie);
+      }
     });
 
     res.json({
@@ -134,13 +135,13 @@ export const getShows = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// ===============================
-// API to get single movie shows
-// ===============================
+// ======================================
+// API to get single movie show timings
+// ======================================
 export const getShow = async (req, res) => {
   try {
     const { movieId } = req.params;
@@ -170,6 +171,6 @@ export const getShow = async (req, res) => {
     res.json({ success: true, movie, dateTime });
   } catch (error) {
     console.error(error);
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
