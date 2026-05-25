@@ -38,6 +38,15 @@ const Navbar = () => {
   }, []);
 
   const handleNavigate = (path) => {
+    if (path === "/#ai-picks") {
+      navigate("/");
+      setTimeout(() => {
+        document.getElementById("ai-picks")?.scrollIntoView({ behavior: "smooth" });
+      }, 80);
+      setIsOpen(false);
+      return;
+    }
+
     navigate(path);
     window.scrollTo({ top: 0, behavior: "smooth" });
     setIsOpen(false);
@@ -75,8 +84,8 @@ const Navbar = () => {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-8 text-sm font-medium">
-            {["/", "/movies", "/favorite", "/theatres"].map((path, i) => {
-              const labels = ["Home", "Movies", "Favourites", "Theaters"];
+            {["/", "/movies", "/#ai-picks", "/favorite", "/theatres"].map((path, i) => {
+              const labels = ["Home", "Movies", "AI Picks", "Favourites", "Theaters"];
               return (
                 <button
                   key={path}
@@ -95,7 +104,10 @@ const Navbar = () => {
           {/* Right Side */}
           <div className="flex items-center gap-4 sm:gap-6">
 
-            <SearchIcon className="hidden md:block w-5 h-5 text-white/70 hover:text-white cursor-pointer transition" />
+            <SearchIcon
+              onClick={() => handleNavigate("/movies")}
+              className="hidden md:block w-5 h-5 text-white/70 hover:text-white cursor-pointer transition"
+            />
 
             {!user ? (
               <button
@@ -142,12 +154,13 @@ const Navbar = () => {
         </div>
 
         <div className="flex flex-col gap-8 mt-10 px-8 text-lg font-semibold text-white">
-          {[
-            { label: "Home", path: "/" },
-            { label: "Movies", path: "/movies" },
-            { label: "Favourites", path: "/favorite" },
-            { label: "Theaters", path: "/theatres" },
-          ].map((item) => (
+            {[
+              { label: "Home", path: "/" },
+              { label: "Movies", path: "/movies" },
+              { label: "AI Picks", path: "/#ai-picks" },
+              { label: "Favourites", path: "/favorite" },
+              { label: "Theaters", path: "/theatres" },
+            ].map((item) => (
             <button
               key={item.path}
               onClick={() => handleNavigate(item.path)}

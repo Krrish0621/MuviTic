@@ -1,5 +1,5 @@
-import { useEffect, useState, useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import { ArrowRightIcon, ClockIcon } from "lucide-react";
 import isoTimeFormat from "../lib/isoTimeFormat";
@@ -20,8 +20,8 @@ const SeatLayout = () => {
   const PREMIUM_ROWS = ["C", "D"];
 
   const { id, date } = useParams();
-  const navigate = useNavigate();
   const { axios, getToken, user } = useAppContext();
+  const currency = import.meta.env.VITE_CURRENCY || "$";
 
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
@@ -181,6 +181,14 @@ const SeatLayout = () => {
                   : "None"}
               </span>
             </p>
+
+            <p className="mt-3 text-sm text-white/70">
+              Estimated total:{" "}
+              <span className="font-semibold text-primary">
+                {currency}
+                {totalPrice}
+              </span>
+            </p>
           </div>
         </div>
 
@@ -257,7 +265,10 @@ const SeatLayout = () => {
                        transition-all duration-300
                        animate-pulse disabled:opacity-50"
           >
-            Proceed to Checkout →
+            <span className="inline-flex items-center gap-2">
+              Proceed to Checkout
+              <ArrowRightIcon className="h-5 w-5" />
+            </span>
           </button>
 
         </div>

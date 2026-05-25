@@ -1,13 +1,14 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BlurCircle from "../components/BlurCircle";
-import { Heart, PlayCircleIcon, StarIcon } from "lucide-react";
+import { BrainCircuit, Heart, PlayCircleIcon, Sparkles, StarIcon } from "lucide-react";
 import timeFormat from "../lib/timeFormat";
 import DateSelect from "../components/DateSelect";
 import MovieCard from "../components/MovieCard";
 import Loading from "../components/Loading";
 import { useAppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
+import { getMovieAiInsights } from "../lib/movieAi";
 
 const MovieDetails = () => {
   const navigate = useNavigate();
@@ -67,6 +68,7 @@ const MovieDetails = () => {
   if (!show) return <Loading />;
 
   const movie = show.movie;
+  const aiInsights = getMovieAiInsights(movie);
 
   return (
     <section className="relative pt-28 md:pt-36 px-6 md:px-16 lg:px-32 pb-24 overflow-hidden">
@@ -108,6 +110,24 @@ const MovieDetails = () => {
             {movie?.genres?.map((g) => g.name).join(", ")} •{" "}
             {movie?.release_date?.split("-")[0]}
           </p>
+
+          <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.055] p-4 backdrop-blur-xl">
+            <div className="flex items-center gap-2 text-primary">
+              <BrainCircuit className="h-5 w-5" />
+              <p className="text-sm font-medium">AI booking insight</p>
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              {aiInsights.map((insight) => (
+                <div
+                  key={insight}
+                  className="rounded-xl border border-white/10 bg-black/25 p-3 text-sm text-white/70"
+                >
+                  <Sparkles className="mb-2 h-4 w-4 text-primary" />
+                  {insight}
+                </div>
+              ))}
+            </div>
+          </div>
 
           {/* Buttons */}
           <div className="flex items-center flex-wrap gap-4 mt-6">
