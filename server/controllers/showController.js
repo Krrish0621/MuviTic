@@ -47,15 +47,86 @@ export const getNowPlayingMovies = async (req, res) => {
       .filter((movie) => movie.poster_path)
       .slice(0, 12);
 
+    const popularResponse = await axios.get(
+      "https://api.themoviedb.org/3/movie/popular",
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
+        },
+        params: {
+          region: "IN",
+          page: 1,
+        },
+      }
+    );
+
+    const upcomingResponse = await axios.get(
+      "https://api.themoviedb.org/3/movie/upcoming",
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
+        },
+        params: {
+          region: "IN",
+          page: 1,
+        },
+      }
+    );
+
     res.json({
       success: true,
       sections: {
         nowPlaying,
         olderMovies,
+        popular: popularResponse.data.results
+          .filter((movie) => movie.poster_path)
+          .slice(0, 16),
+        upcoming: upcomingResponse.data.results
+          .filter((movie) => movie.poster_path)
+          .slice(0, 16),
       },
     });
   } catch (error) {
     console.error("Now Playing Fetch Error:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ======================================
+// API to search TMDB movies for admin
+// ======================================
+export const searchMovies = async (req, res) => {
+  try {
+    const query = req.query.q?.trim();
+
+    if (!query) {
+      return res.json({ success: true, movies: [] });
+    }
+
+    const { data } = await axios.get(
+      "https://api.themoviedb.org/3/search/movie",
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
+        },
+        params: {
+          query,
+          include_adult: false,
+          page: 1,
+          region: "IN",
+        },
+      }
+    );
+
+    res.json({
+      success: true,
+      movies: data.results
+        .filter((movie) => movie.poster_path)
+        .sort((a, b) => b.popularity - a.popularity)
+        .slice(0, 18),
+    });
+  } catch (error) {
+    console.error("Movie Search Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };

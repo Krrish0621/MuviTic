@@ -1,6 +1,7 @@
 import React from "react";
 import HeroSection from "../components/HeroSection";
 import AiMovieConcierge from "../components/AiMovieConcierge";
+import SmartFeaturesSection from "../components/SmartFeaturesSection";
 import FeaturedSection from "../components/FeaturedSection";
 import TrailersSection from "../components/TrailersSection";
 
@@ -9,6 +10,7 @@ const Home = () => {
     <>
       <HeroSection />
       <AiMovieConcierge />
+      <SmartFeaturesSection />
       <FeaturedSection />
       <TrailersSection />
     </>
