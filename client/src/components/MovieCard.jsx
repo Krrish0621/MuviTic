@@ -14,7 +14,7 @@ const MovieCard = ({ movie }) => {
   };
 
   return (
-    <div className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-white/[0.055] p-4 backdrop-blur-md transition-all duration-300 hover:-translate-y-2 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10">
+    <div className="glass-panel group relative flex h-full flex-col justify-between overflow-hidden rounded-[1.6rem] p-4 transition-all duration-300 hover:-translate-y-2 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10">
       <div className="relative overflow-hidden rounded-xl">
         <img
           onClick={handleNavigate}
@@ -23,7 +23,7 @@ const MovieCard = ({ movie }) => {
           className="h-52 w-full cursor-pointer object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent" />
-        <div className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-black/65 px-2.5 py-1 text-xs text-white/80 backdrop-blur-md">
+        <div className="absolute bottom-3 left-3 flex items-center gap-1 rounded-full bg-black/70 px-2.5 py-1 text-xs text-white/80 backdrop-blur-md">
           <Clock3 className="h-3.5 w-3.5 text-primary" />
           {timeFormat(movie.runtime)}
         </div>
@@ -42,7 +42,7 @@ const MovieCard = ({ movie }) => {
       <div className="mt-4 flex items-center justify-between">
         <button
           onClick={handleNavigate}
-          className="rounded-full bg-primary px-4 py-2 text-xs font-medium text-black shadow-md shadow-primary/20 transition-all duration-300 hover:bg-primary-dull hover:shadow-primary/40"
+          className="cinema-button px-4 py-2 text-xs"
         >
           Buy Tickets
         </button>

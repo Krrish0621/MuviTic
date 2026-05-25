@@ -178,7 +178,7 @@ const AddShows = () => {
 
       <div className="mt-8 grid gap-6 xl:grid-cols-[1fr_360px]">
         <div className="space-y-6">
-          <div className="rounded-3xl border border-white/10 bg-white/[0.055] p-5 backdrop-blur-xl">
+          <div className="glass-panel rounded-3xl p-5">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="flex items-center gap-2 text-sm text-primary">
@@ -285,7 +285,7 @@ const AddShows = () => {
           </div>
         </div>
 
-        <aside className="h-fit rounded-3xl border border-white/10 bg-white/[0.055] p-5 backdrop-blur-xl xl:sticky xl:top-24">
+        <aside className="glass-panel h-fit rounded-3xl p-5 xl:sticky xl:top-24">
           <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/25">
             {selectedMovie ? (
               <div className="grid grid-cols-[110px_1fr] gap-4 p-3">

@@ -2,32 +2,54 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #00E5C3;       /* Electric Teal */
-  --color-primary-dull: #00BFA6;  /* Hover Teal */
+  --color-primary: #18f2d2;
+  --color-primary-dull: #0fc6ad;
+  --color-coral: #ff4f7b;
+  --color-violet: #8b5cf6;
+  --color-ink: #05050a;
+  --color-panel: #11131d;
 }
 
 * {
   font-family: "Outfit", sans-serif;
   scrollbar-width: thin;
-  scrollbar-color: #2a2a2f #0a0a0f;
+  scrollbar-color: #2b3146 #05050a;
 }
 
-/* Premium cinematic dark background */
 body {
   color: white;
   background:
-    radial-gradient(
-      circle at 20% 20%,
-      rgba(0, 229, 195, 0.08),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 80% 30%,
-      rgba(0, 229, 195, 0.06),
-      transparent 40%
-    ),
-    #0a0a0f;
+    linear-gradient(115deg, rgba(24, 242, 210, 0.08), transparent 32%),
+    radial-gradient(circle at 82% 8%, rgba(255, 79, 123, 0.18), transparent 28%),
+    radial-gradient(circle at 18% 22%, rgba(139, 92, 246, 0.18), transparent 32%),
+    radial-gradient(circle at 50% 95%, rgba(24, 242, 210, 0.1), transparent 36%),
+    #05050a;
   min-height: 100vh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, black, transparent 82%);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent, rgba(24, 242, 210, 0.08), transparent),
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.06), transparent 34%);
+  opacity: 0.7;
 }
 
 /* =========================================
@@ -48,11 +70,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0a0f;
+  background: #05050a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2a2a2f;
+  background: #2b3146;
   border-radius: 10px;
 }
 
@@ -79,6 +101,70 @@ input::-webkit-inner-spin-button {
 button,
 a {
   transition: all 0.3s ease;
+}
+
+.cinema-container {
+  width: min(1180px, calc(100% - 32px));
+  margin-inline: auto;
+}
+
+.glass-panel {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.035)),
+    rgba(6, 8, 18, 0.72);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(22px);
+}
+
+.holo-border {
+  position: relative;
+}
+
+.holo-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(24, 242, 210, 0.65), rgba(255, 79, 123, 0.42), rgba(139, 92, 246, 0.54));
+  opacity: 0.55;
+  filter: blur(10px);
+}
+
+.text-cinema-gradient {
+  background: linear-gradient(90deg, #ffffff 0%, #18f2d2 34%, #ff4f7b 68%, #f6d365 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cinema-button {
+  border-radius: 999px;
+  background: linear-gradient(90deg, #18f2d2, #7cf7e8);
+  color: #020306;
+  font-weight: 700;
+  box-shadow: 0 18px 40px rgba(24, 242, 210, 0.24);
+}
+
+.cinema-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 54px rgba(24, 242, 210, 0.34);
+}
+
+.coral-button {
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff4f7b, #ff9a5a);
+  color: #05050a;
+  font-weight: 700;
+  box-shadow: 0 18px 40px rgba(255, 79, 123, 0.24);
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 @keyframes floatGlow {

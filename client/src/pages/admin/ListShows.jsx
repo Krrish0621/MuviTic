@@ -40,7 +40,7 @@ const ListShows = () => {
     <>
       <Title text1="List" text2="Shows" />
 
-      <div className="mt-6 flex max-w-5xl flex-col gap-4 rounded-3xl border border-white/10 bg-white/[0.055] p-4 backdrop-blur-xl md:flex-row md:items-center md:justify-between">
+      <div className="glass-panel mt-6 flex max-w-5xl flex-col gap-4 rounded-3xl p-4 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="flex items-center gap-2 text-sm text-primary">
             <CalendarDays className="h-4 w-4" />

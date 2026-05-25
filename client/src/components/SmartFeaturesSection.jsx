@@ -43,16 +43,16 @@ const features = [
 
 const SmartFeaturesSection = () => {
   return (
-    <section className="relative overflow-hidden px-6 py-20 md:px-16 lg:px-24 xl:px-44">
+    <section className="relative overflow-hidden py-20">
       <BlurCircle top="140px" right="-120px" size="22rem" opacity={0.12} />
 
-      <div className="mx-auto max-w-6xl">
+      <div className="cinema-container">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-sm uppercase tracking-widest text-white/55">
               Platform Upgrade
             </p>
-            <h2 className="mt-2 max-w-2xl text-3xl font-semibold md:text-4xl">
+            <h2 className="mt-2 max-w-2xl text-4xl font-black md:text-5xl">
               Built for discovery, bookings and real cinema operations.
             </h2>
           </div>
@@ -66,7 +66,7 @@ const SmartFeaturesSection = () => {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="rounded-3xl border border-white/10 bg-white/[0.055] p-6 backdrop-blur-xl transition hover:-translate-y-1 hover:border-primary/40"
+              className="glass-panel rounded-3xl p-6 transition hover:-translate-y-1 hover:border-primary/40"
             >
               <div className="grid h-12 w-12 place-items-center rounded-2xl bg-primary/15 text-primary">
                 <feature.icon className="h-6 w-6" />

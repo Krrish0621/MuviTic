@@ -18,7 +18,7 @@ const DateSelect = ({ dateTime, id }) => {
 
   return (
     <div id="dateSelect" className="pt-28 md:pt-32">
-      <div className="relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-10 p-8 md:p-10 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl">
+      <div className="glass-panel relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-10 p-8 md:p-10 rounded-[2rem]">
 
         {/* Glow Background Effects */}
         <BlurCircle top="-120px" left="-120px" size="18rem" opacity={0.2} />
@@ -75,7 +75,7 @@ const DateSelect = ({ dateTime, id }) => {
         {/* CTA Button */}
         <button
           onClick={onBookHandler}
-          className="mt-6 md:mt-0 px-10 py-3 rounded-xl bg-primary text-black font-medium shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-105 transition-all duration-300"
+          className="cinema-button mt-6 md:mt-0 px-10 py-3"
         >
           Book Now
         </button>

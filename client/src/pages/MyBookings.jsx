@@ -50,21 +50,21 @@ const MyBookings = () => {
       <BlurCircle top="120px" left="-120px" size="22rem" opacity={0.15} />
       <BlurCircle bottom="100px" right="-120px" size="20rem" opacity={0.12} />
 
-      <div className="max-w-5xl mx-auto">
+      <div className="cinema-container max-w-5xl">
 
         {/* Header */}
         <div className="mb-10">
           <p className="text-white/60 uppercase tracking-widest text-sm">
             Your Activity
           </p>
-          <h1 className="text-3xl md:text-4xl font-semibold mt-2">
+          <h1 className="text-4xl md:text-5xl font-black mt-2 text-cinema-gradient">
             My Bookings
           </h1>
         </div>
 
         {/* Empty State */}
         {bookings.length === 0 ? (
-          <div className="text-center mt-20">
+          <div className="glass-panel rounded-3xl p-10 text-center mt-20">
             <p className="text-white/60">
               You haven’t booked any tickets yet.
             </p>
@@ -75,7 +75,7 @@ const MyBookings = () => {
             {bookings.map((item) => (
               <div
                 key={item._id}
-                className="flex flex-col md:flex-row justify-between bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 md:p-6 hover:border-primary/40 transition-all duration-300"
+                className="glass-panel flex flex-col md:flex-row justify-between rounded-3xl p-4 md:p-6 hover:border-primary/40 transition-all duration-300"
               >
                 {/* Left Section */}
                 <div className="flex flex-col md:flex-row gap-6">
@@ -130,7 +130,7 @@ const MyBookings = () => {
                     {!item.isPaid ? (
                       <Link
                         to={item.paymentLink}
-                        className="px-4 py-2 text-sm bg-primary text-black rounded-full font-medium shadow-md shadow-primary/20 hover:shadow-primary/40 transition-all duration-300"
+                        className="cinema-button px-4 py-2 text-sm"
                       >
                         Pay Now
                       </Link>

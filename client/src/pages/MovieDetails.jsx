@@ -71,18 +71,18 @@ const MovieDetails = () => {
   const aiInsights = getMovieAiInsights(movie);
 
   return (
-    <section className="relative pt-28 md:pt-36 px-6 md:px-16 lg:px-32 pb-24 overflow-hidden">
+    <section className="relative overflow-hidden px-4 pt-32 pb-24 sm:px-6">
 
       <BlurCircle top="100px" left="-120px" size="22rem" opacity={0.15} />
       <BlurCircle bottom="80px" right="-120px" size="22rem" opacity={0.12} />
 
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-12">
+      <div className="cinema-container glass-panel rounded-[2rem] p-5 md:p-8 flex flex-col md:flex-row gap-12">
 
         {/* Poster */}
         <img
           src={image_base_url + movie?.poster_path}
           alt="poster"
-          className="mx-auto md:mx-0 rounded-2xl h-[420px] w-[280px] object-cover shadow-lg"
+          className="mx-auto h-[440px] w-[292px] rounded-[1.5rem] object-cover shadow-2xl shadow-black/40 md:mx-0"
         />
 
         {/* Info Section */}
@@ -92,7 +92,7 @@ const MovieDetails = () => {
             {movie?.original_language}
           </p>
 
-          <h1 className="text-3xl md:text-4xl font-semibold max-w-xl">
+          <h1 className="text-4xl md:text-6xl font-black max-w-2xl">
             {movie?.title}
           </h1>
 
@@ -111,7 +111,7 @@ const MovieDetails = () => {
             {movie?.release_date?.split("-")[0]}
           </p>
 
-          <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.055] p-4 backdrop-blur-xl">
+          <div className="glass-panel mt-4 rounded-2xl p-4">
             <div className="flex items-center gap-2 text-primary">
               <BrainCircuit className="h-5 w-5" />
               <p className="text-sm font-medium">AI booking insight</p>
@@ -139,14 +139,14 @@ const MovieDetails = () => {
 
             <a
               href="#dateSelect"
-              className="px-8 py-3 text-sm bg-primary text-black hover:bg-primary-dull rounded-full font-medium shadow-md shadow-primary/20 hover:shadow-primary/40 transition-all duration-300"
+              className="cinema-button px-8 py-3 text-sm"
             >
               Buy Tickets
             </a>
 
             <button
               onClick={handleFavorite}
-              className="bg-white/5 border border-white/10 p-3 rounded-full hover:bg-primary/10 transition"
+              className="bg-white/5 border border-white/10 p-3 rounded-full hover:bg-primary/10 hover:border-primary/50 transition"
             >
               <Heart
                 className={`w-5 h-5 ${
@@ -161,7 +161,7 @@ const MovieDetails = () => {
       </div>
 
       {/* Cast Section */}
-      <div className="mt-24 max-w-6xl mx-auto">
+      <div className="cinema-container mt-24">
         <p className="text-white/60 uppercase tracking-widest text-sm">
           Cast
         </p>
@@ -189,12 +189,12 @@ const MovieDetails = () => {
       </div>
 
       {/* Date Select */}
-      <div className="max-w-6xl mx-auto">
+      <div className="cinema-container">
         <DateSelect dateTime={show?.dateTime} id={id} />
       </div>
 
       {/* Recommended */}
-      <div className="mt-24 max-w-6xl mx-auto">
+      <div className="cinema-container mt-24">
         <p className="text-white/60 uppercase tracking-widest text-sm">
           Recommendations
         </p>

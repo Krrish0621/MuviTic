@@ -49,6 +49,35 @@ const languageKeywords = {
   japanese: "ja",
 };
 
+const semanticHints = {
+  scary: ["Horror", "Thriller", "Mystery"],
+  horror: ["Horror", "Thriller"],
+  funny: ["Comedy", "Family"],
+  comedy: ["Comedy"],
+  laugh: ["Comedy"],
+  romantic: ["Romance", "Drama"],
+  romance: ["Romance", "Drama"],
+  love: ["Romance", "Drama"],
+  emotional: ["Drama", "Romance"],
+  sad: ["Drama"],
+  action: ["Action", "Adventure"],
+  fight: ["Action", "Crime"],
+  superhero: ["Action", "Adventure", "Science Fiction"],
+  kids: ["Family", "Animation", "Adventure"],
+  children: ["Family", "Animation"],
+  animation: ["Animation", "Family"],
+  mystery: ["Mystery", "Thriller", "Crime"],
+  suspense: ["Thriller", "Mystery"],
+  thriller: ["Thriller", "Crime", "Mystery"],
+  sci: ["Science Fiction", "Adventure"],
+  space: ["Science Fiction", "Adventure"],
+  fantasy: ["Fantasy", "Adventure"],
+  adventure: ["Adventure", "Action"],
+  musical: ["Music", "Drama"],
+  history: ["History", "Drama"],
+  premium: ["Action", "Adventure", "Science Fiction", "Fantasy"],
+};
+
 const stopWords = new Set([
   "a",
   "an",
@@ -96,6 +125,9 @@ const getIntent = (prompt, moodKey) => {
   return {
     words,
     language,
+    hintedGenres: Array.from(
+      new Set(words.flatMap((word) => semanticHints[word] || []))
+    ),
     wantsShort: words.some((word) => ["short", "quick", "crisp"].includes(word)),
     wantsLong: words.some((word) => ["long", "epic", "big"].includes(word)),
     wantsTopRated: words.some((word) => ["best", "top", "rating", "rated", "popular"].includes(word)),
@@ -136,6 +168,10 @@ export const getAiRecommendations = (movies, prompt, moodKey = "thrill", limit =
         if (genres.includes(genre)) score += 14;
       });
 
+      intent.hintedGenres.forEach((genre) => {
+        if (genres.includes(genre)) score += 18;
+      });
+
       intent.profile.keywords.forEach((word) => {
         if (searchable.includes(word)) score += 4;
       });
@@ -157,7 +193,6 @@ export const getAiRecommendations = (movies, prompt, moodKey = "thrill", limit =
             : `Strong ${intent.profile.label.toLowerCase()} match based on rating, story signals, and runtime.`,
       };
     })
-    .filter((item) => item.score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, limit);
 };

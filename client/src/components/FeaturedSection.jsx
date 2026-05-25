@@ -14,18 +14,18 @@ const FeaturedSection = () => {
   };
 
   return (
-    <section className="relative px-6 md:px-16 lg:px-24 xl:px-44 py-20 overflow-hidden">
+    <section className="relative overflow-hidden py-20">
 
       {/* Cinematic Glow */}
       <BlurCircle top="-120px" right="-100px" size="22rem" opacity={0.18} />
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-12">
+      <div className="cinema-container flex items-center justify-between mb-12">
         <div>
           <p className="text-white/60 uppercase tracking-widest text-sm">
             Featured Collection
           </p>
-          <h2 className="text-3xl md:text-4xl font-semibold mt-2">
+          <h2 className="text-4xl md:text-5xl font-black mt-2">
             Now Showing
           </h2>
         </div>
@@ -40,7 +40,7 @@ const FeaturedSection = () => {
       </div>
 
       {/* Movie Grid */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <div className="cinema-container grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {shows.slice(0, 4).map((show) => (
           <MovieCard key={show._id} movie={show} />
         ))}
@@ -50,7 +50,7 @@ const FeaturedSection = () => {
       <div className="flex justify-center mt-16">
         <button
           onClick={goToMovies}
-          className="px-12 py-3 rounded-xl bg-primary text-black font-medium shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-105 transition-all duration-300"
+          className="cinema-button px-12 py-3"
         >
           Explore More Movies
         </button>

@@ -39,17 +39,15 @@ const Theatres = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
+    <div className="min-h-screen text-white">
 
       {/* ===== HERO SECTION ===== */}
-      <section className="pt-32 pb-20 px-6 md:px-16 lg:px-36">
+      <section className="cinema-container pt-32 pb-20">
         <p className="text-white/60 uppercase tracking-widest text-sm">
           Discover Cinemas
         </p>
 
-        <h1 className="text-4xl font-bold mt-2 
-                       bg-gradient-to-r from-red-500 via-pink-500 to-orange-400 
-                       bg-clip-text text-transparent">
+        <h1 className="text-5xl font-black mt-2 text-cinema-gradient">
           Experience Movies Like Never Before
         </h1>
 
@@ -65,24 +63,24 @@ const Theatres = () => {
             placeholder="Search by city or theatre..."
             className="flex-1 px-5 py-3 rounded-full bg-white/10 border border-white/10 focus:outline-none focus:border-primary"
           />
-          <button className="px-6 py-3 rounded-full bg-primary text-black font-medium">
+          <button className="cinema-button px-6 py-3">
             Search
           </button>
         </div>
       </section>
 
       {/* ===== STATS SECTION ===== */}
-      <section className="px-6 md:px-16 lg:px-36 pb-16">
+      <section className="cinema-container pb-16">
         <div className="grid md:grid-cols-3 gap-8 text-center">
-          <div className="bg-white/5 rounded-2xl p-8 border border-white/10">
+          <div className="glass-panel rounded-3xl p-8">
             <h2 className="text-3xl font-bold">50+</h2>
             <p className="text-white/60 mt-2">Partner Theatres</p>
           </div>
-          <div className="bg-white/5 rounded-2xl p-8 border border-white/10">
+          <div className="glass-panel rounded-3xl p-8">
             <h2 className="text-3xl font-bold">120+</h2>
             <p className="text-white/60 mt-2">Screens Available</p>
           </div>
-          <div className="bg-white/5 rounded-2xl p-8 border border-white/10">
+          <div className="glass-panel rounded-3xl p-8">
             <h2 className="text-3xl font-bold">4.5★</h2>
             <p className="text-white/60 mt-2">Average Rating</p>
           </div>
@@ -90,15 +88,13 @@ const Theatres = () => {
       </section>
 
       {/* ===== THEATRE LIST ===== */}
-      <section className="px-6 md:px-16 lg:px-36 pb-24">
+      <section className="cinema-container pb-24">
 
         <div className="mb-12">
           <p className="text-white/50 uppercase tracking-widest text-sm">
             Find Your Theatre
           </p>
-          <h2 className='text-4xl font-bold mt-2 
-                       bg-gradient-to-r from-red-500 via-pink-500 to-orange-400 
-                       bg-clip-text text-transparent'>
+          <h2 className='text-4xl font-black mt-2 text-cinema-gradient'>
             Available Theatres
           </h2>
         </div>
@@ -112,8 +108,7 @@ const Theatres = () => {
             {theatres.map((theatre) => (
               <div
                 key={theatre._id}
-                className="bg-white/5 backdrop-blur-xl border border-white/10 
-                           rounded-2xl p-6 hover:border-primary/40 
+                className="glass-panel rounded-3xl p-6 hover:border-primary/40 
                            transition duration-300 shadow-lg hover:shadow-primary/20"
               >
                 <h2 className="text-xl font-semibold mb-2">
@@ -144,7 +139,7 @@ const Theatres = () => {
                   ))}
                 </div>
 
-                <button className="w-full py-2 rounded-full bg-primary text-black font-medium hover:bg-primary-dull transition-all">
+                <button className="cinema-button w-full py-2">
                   View Shows
                 </button>
               </div>
@@ -154,15 +149,15 @@ const Theatres = () => {
       </section>
 
       {/* ===== CTA SECTION ===== */}
-      <section className="px-6 md:px-16 lg:px-36 pb-32">
-        <div className="bg-gradient-to-r from-primary/20 to-pink-500/20 border border-white/10 rounded-3xl p-12 text-center">
+      <section className="cinema-container pb-32">
+        <div className="holo-border glass-panel rounded-3xl p-12 text-center">
           <h2 className="text-3xl font-semibold">
             Want to Partner With Us?
           </h2>
           <p className="text-white/60 mt-4 max-w-2xl mx-auto">
             Join our growing cinema network and reach thousands of movie lovers.
           </p>
-          <button className="mt-6 px-6 py-3 rounded-full bg-primary text-black font-medium">
+          <button className="cinema-button mt-6 px-6 py-3">
             Become a Partner
           </button>
         </div>

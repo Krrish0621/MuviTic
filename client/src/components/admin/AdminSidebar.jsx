@@ -26,7 +26,7 @@ const AdminSidebar = () => {
   ];
 
   return (
-    <aside className="h-[calc(100vh-64px)] md:flex flex-col items-center pt-10 w-full max-w-16 md:max-w-64 border-r border-white/10 bg-white/5 backdrop-blur-xl text-sm">
+    <aside className="h-[calc(100vh-80px)] md:flex flex-col items-center pt-10 w-full max-w-16 md:max-w-72 border-r border-white/10 bg-black/35 backdrop-blur-2xl text-sm">
 
       {/* Profile */}
       <div className="flex flex-col items-center">
@@ -50,11 +50,11 @@ const AdminSidebar = () => {
             to={link.path}
             end
             className={({ isActive }) =>
-              `group relative flex items-center max-md:justify-center gap-3 w-full py-3 md:px-6 rounded-xl transition-all duration-300
+              `group relative flex items-center max-md:justify-center gap-3 w-full py-3 md:px-6 rounded-2xl transition-all duration-300
               ${
                 isActive
-                  ? "bg-primary/15 text-primary shadow-inner shadow-primary/20"
-                  : "text-white/60 hover:bg-white/5 hover:text-white"
+                  ? "bg-primary text-black shadow-lg shadow-primary/20"
+                  : "text-white/60 hover:bg-white/[0.07] hover:text-white"
               }`
             }
           >
@@ -68,7 +68,7 @@ const AdminSidebar = () => {
 
                 {/* Active Indicator Bar */}
                 {isActive && (
-                  <span className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-primary rounded-l-md" />
+                  <span className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-white rounded-l-md" />
                 )}
               </>
             )}

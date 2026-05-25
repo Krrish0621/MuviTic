@@ -29,10 +29,10 @@ const AiMovieConcierge = () => {
   };
 
   return (
-    <section id="ai-picks" className="relative px-6 md:px-16 lg:px-24 xl:px-44 py-20 overflow-hidden">
+    <section id="ai-picks" className="relative overflow-hidden py-24">
       <BlurCircle top="0" left="-120px" size="20rem" opacity={0.14} />
 
-      <div className="relative max-w-6xl mx-auto overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.055] backdrop-blur-2xl shadow-2xl shadow-black/30">
+      <div className="cinema-container holo-border glass-panel relative overflow-hidden rounded-[2rem]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(0,229,195,0.16),transparent_34%),radial-gradient(circle_at_80%_30%,rgba(244,63,94,0.14),transparent_32%)]" />
 
         <div className="relative grid lg:grid-cols-[0.95fr_1.35fr] gap-8 p-6 md:p-10">
@@ -45,13 +45,14 @@ const AiMovieConcierge = () => {
                 </span>
               </div>
 
-              <h2 className="mt-4 text-3xl md:text-5xl font-semibold leading-tight">
-                Tell us the vibe. We will find the show.
+              <h2 className="mt-4 text-4xl md:text-6xl font-black leading-tight">
+                Ask anything. CineMatch still finds a movie.
               </h2>
 
               <p className="mt-5 text-white/60 leading-relaxed">
-                A smart movie-matching layer scans genres, runtime, language,
-                ratings and story signals from your available TMDB shows.
+                Type any prompt: scary but short, Hindi comedy, superhero date
+                night, emotional family movie, or just a messy mood. The matcher
+                always returns the closest available shows.
               </p>
             </div>
 
@@ -63,8 +64,8 @@ const AiMovieConcierge = () => {
                     onClick={() => setMood(item.key)}
                     className={`px-4 py-2 rounded-full text-sm border ${
                       mood === item.key
-                        ? "bg-primary text-black border-primary"
-                        : "bg-white/5 text-white/70 border-white/10 hover:border-primary/50 hover:text-white"
+                        ? "bg-primary text-black border-primary shadow-lg shadow-primary/20"
+                        : "bg-white/[0.055] text-white/70 border-white/10 hover:border-primary/50 hover:text-white"
                     }`}
                   >
                     {item.label}
@@ -82,7 +83,7 @@ const AiMovieConcierge = () => {
                   onChange={(event) => setPrompt(event.target.value)}
                   rows={4}
                   className="w-full resize-none bg-transparent px-2 py-2 text-white placeholder:text-white/35 outline-none"
-                  placeholder="Example: Hindi action movie, high rating, under 2 hours"
+                  placeholder="Example: I want something scary but not too long, with good ratings"
                 />
                 <div className="flex flex-wrap gap-2 border-t border-white/10 pt-3">
                   {aiPromptIdeas.slice(1).map((idea) => (
@@ -105,7 +106,7 @@ const AiMovieConcierge = () => {
                 <button
                   key={movie._id}
                   onClick={() => openMovie(movie._id)}
-                  className="group grid grid-cols-[86px_1fr_auto] items-center gap-4 rounded-2xl border border-white/10 bg-black/28 p-3 text-left hover:border-primary/50 hover:bg-black/40"
+                  className="group grid grid-cols-[86px_1fr_auto] items-center gap-4 rounded-2xl border border-white/10 bg-black/32 p-3 text-left hover:border-primary/50 hover:bg-white/[0.06]"
                 >
                   <div className="relative h-28 overflow-hidden rounded-xl bg-white/5">
                     <img

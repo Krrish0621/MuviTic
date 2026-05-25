@@ -101,26 +101,24 @@ const Movies = () => {
       <BlurCircle bottom="100px" right="-100px" size="20rem" opacity={0.15} />
 
       {/* Heading */}
-      <div className="mb-10 flex flex-col gap-8">
+      <div className="cinema-container mb-10 flex flex-col gap-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-white/60 uppercase tracking-widest text-sm">
               Now Streaming
             </p>
-            <h1 className="text-4xl font-bold mt-2 
-                           bg-gradient-to-r from-red-500 via-pink-500 to-orange-400 
-                           bg-clip-text text-transparent">
-              Book Now
+            <h1 className="text-5xl font-black mt-2 text-cinema-gradient">
+              Discover Shows
             </h1>
           </div>
 
-          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/60">
+          <div className="glass-panel flex items-center gap-2 rounded-full px-4 py-3 text-sm text-white/70">
             <Sparkles className="h-4 w-4 text-primary" />
             {aiPick ? `${aiPick.movie.title} is your AI top pick` : "AI picks update as you filter"}
           </div>
         </div>
 
-        <div className="grid gap-4 rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl lg:grid-cols-[1fr_auto]">
+        <div className="glass-panel grid gap-4 rounded-3xl p-4 lg:grid-cols-[1fr_auto]">
           <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/25 px-4 py-3">
             <Search className="h-5 w-5 text-white/45" />
             <input
@@ -154,7 +152,7 @@ const Movies = () => {
               className={`shrink-0 rounded-full border px-4 py-2 text-sm ${
                 activeGenre === genre
                   ? "border-primary bg-primary text-black"
-                  : "border-white/10 bg-white/5 text-white/65 hover:border-primary/50 hover:text-white"
+                  : "border-white/10 bg-white/[0.055] text-white/65 hover:border-primary/50 hover:text-white"
               }`}
             >
               {genre}
@@ -164,14 +162,14 @@ const Movies = () => {
       </div>
 
       {/* Movies Grid */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <div className="cinema-container grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {filteredShows.map((movie) => (
           <MovieCard movie={movie} key={movie._id} />
         ))}
       </div>
 
       {filteredShows.length === 0 && (
-        <div className="mt-16 rounded-3xl border border-white/10 bg-white/5 p-10 text-center">
+        <div className="cinema-container glass-panel mt-16 rounded-3xl p-10 text-center">
           <h2 className="text-2xl font-semibold">No matching movies</h2>
           <p className="mt-3 text-white/55">
             Try a different mood, genre or search term.

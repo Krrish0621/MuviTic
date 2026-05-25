@@ -95,7 +95,7 @@ const Dashboard = () => {
           {dashboardCards.map((card, index) => (
             <div
               key={index}
-              className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.055] px-5 py-4 backdrop-blur-xl max-w-60 w-full hover:border-primary/40 transition"
+              className="glass-panel flex items-center justify-between rounded-2xl px-5 py-4 max-w-60 w-full hover:border-primary/40 transition"
             >
               <div>
                 <h1 className="text-sm text-white/55">{card.title}</h1>
@@ -110,7 +110,7 @@ const Dashboard = () => {
       </div>
 
       <div className="mt-8 grid gap-5 lg:grid-cols-[1fr_1fr] max-w-5xl">
-        <div className="rounded-3xl border border-white/10 bg-white/[0.055] p-6 backdrop-blur-xl">
+        <div className="glass-panel rounded-3xl p-6">
           <p className="flex items-center gap-2 text-sm text-primary">
             <Ticket className="h-4 w-4" />
             Live operations
@@ -123,7 +123,7 @@ const Dashboard = () => {
           </p>
         </div>
 
-        <div className="rounded-3xl border border-white/10 bg-white/[0.055] p-6 backdrop-blur-xl">
+        <div className="glass-panel rounded-3xl p-6">
           <p className="flex items-center gap-2 text-sm text-primary">
             <Clock3 className="h-4 w-4" />
             Best performing show
@@ -145,7 +145,7 @@ const Dashboard = () => {
         {dashboardData.activeShows.map((show) => (
           <div
             key={show._id}
-            className="rounded-2xl overflow-hidden h-full bg-white/[0.055] border border-white/10 hover:-translate-y-1 hover:border-primary/40 transition duration-300"
+            className="glass-panel rounded-2xl overflow-hidden h-full hover:-translate-y-1 hover:border-primary/40 transition duration-300"
           >
             <img
               src={image_base_url + show.movie.poster_path}
